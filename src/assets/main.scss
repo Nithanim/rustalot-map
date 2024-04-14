@@ -1,0 +1,34 @@
+@import "reset.css";
+
+@font-face {
+  font-family: 'IM-Fell-English-SC-Regular';
+  src: url('/IMFellEnglishSC-Regular.ttf') format('woff2');
+}
+@font-face {
+  font-family: 'IM-Fell-English-Regular';
+  src: url('/IMFellEnglish-Regular.ttf') format('woff2');
+}
+@font-face {
+  font-family: 'IM-Fell-English-Italic';
+  src: url('/IMFellEnglish-Italic.ttf') format('woff2');
+}
+
+html {
+  height: 100%;
+}
+body {
+  height: 100%;
+  overflow-y: auto;
+}
+
+body {
+  font-family: 'IM-Fell-English-Regular', sans-serif;
+  font-size: 16px;
+  background-color: #a98c72;
+}
+
+#app {
+  height: 100%;
+}
+
+@import "leaflet/dist/leaflet.css";
