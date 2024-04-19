@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from "vue";
 import * as L from "leaflet";
-import areaData from "./areaData";
+import layerAreaLabels from "./layerAreaLabels";
 
 const props = defineProps<{}>();
 
@@ -41,22 +41,8 @@ onMounted(() => {
     ]);
   }
 
-  const areas = L.layerGroup(
-    areaData.map((b) => {
-      var poly = L.polygon(b.coords, {
-        color: b.color || "#fcc77f",
-        weight: 2,
-        fill: false,
-      });
-      poly
-        .bindTooltip(b.name, { permanent: true, direction: "center" })
-        .openTooltip();
-      return poly;
-    }),
-  );
-
-  L.control.layers({}, { Gebietsnamen: areas }).addTo(map);
-  areas.addTo(map);
+  L.control.layers({}, { Gebietsnamen: layerAreaLabels }).addTo(map);
+  layerAreaLabels.addTo(map);
 
   map.on("click", function (e) {
     var coords = e.latlng;
