@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {RouterLink, RouterView} from 'vue-router'
-import WorldMap from "@/components/WorldMap.vue";
+import WorldMap from "@/components/worldmap/WorldMap.vue";
 import TimeSlider from "@/components/time/TimeChooserFloater.vue";
 </script>
 

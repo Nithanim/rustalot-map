@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import * as L from "leaflet";
-import areaData from "@/components/areaData";
+import areaData from "./areaData";
 
 const props = defineProps<{}>();
 
 const targetElement = ref<HTMLDivElement>(null);
 
+let map: L.Map;
+
 onMounted(() => {
-  const map = L.map(targetElement.value, {
+  map = L.map(targetElement.value, {
     crs: L.CRS.Simple,
     minZoom: -2,
     zoom: 0,
@@ -18,14 +20,26 @@ onMounted(() => {
     attributionControl: true,
   });
 
-  var bounds = [
-    [-1500, -1500],
-    [1500, 1500],
-  ];
-  L.imageOverlay("/rustalotmap-2024.jpg", bounds, {
-    attribution: "© Map by Rustalot Organizers",
-  }).addTo(map);
-  map.fitBounds(bounds);
+  L.imageOverlay(
+    "/rustalotmap-2024.jpg",
+    [
+      [-1500, -1500],
+      [1500, 1500],
+    ],
+    {
+      attribution: "© Map by Rustalot Organizers",
+    },
+  ).addTo(map);
+
+
+  {
+    const mapCenter = [-98.2825399591045, 28.428833872468243];
+    const w = 400, h = 400;
+    map.fitBounds([
+      [mapCenter[0] - w / 2, mapCenter[1] - h / 2],
+      [mapCenter[0] + w / 2, mapCenter[1] + h / 2],
+    ]);
+  }
 
   const areas = L.layerGroup(
     areaData.map((b) => {
@@ -41,8 +55,8 @@ onMounted(() => {
     }),
   );
 
-  L.control.layers({}, { 'Gebietsnamen': areas }).addTo(map);
-  areas.addTo(map)
+  L.control.layers({}, { Gebietsnamen: areas }).addTo(map);
+  areas.addTo(map);
 
   map.on("click", function (e) {
     var coords = e.latlng;
@@ -52,6 +66,8 @@ onMounted(() => {
   // var markers = new L.MarkerClusterGroup({maxClusterRadius: 50,spiderfyDistanceMultiplier:2.5});
   // map.addLayer(markers);
 });
+
+onUnmounted(() => map.remove());
 </script>
 
 <template>

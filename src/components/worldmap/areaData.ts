@@ -98,7 +98,7 @@ export default [
     ],
   },
   {
-    name: "Das Schloss 🔒",
+    name: "Königliche Burgmauern",
     coords: [
       [203.64675298172568, -57.982756057296896],
       [203.64675298172568, 98.99494936611664],
