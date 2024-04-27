@@ -1,13 +1,18 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from "vue";
+import {onMounted, onUnmounted, ref, watch} from "vue";
 import * as L from "leaflet";
 import layerAreaLabels from "./layerAreaLabels";
+import {layerGroupPlayerPositions, setToTime} from "@/components/worldmap/layerPlayerPositions";
+import { type TimeSelection } from "@/components/time/TimeSelection";
 
-const props = defineProps<{}>();
+const props = defineProps<{
+  timeSelection: TimeSelection
+}>();
 
 const targetElement = ref<HTMLDivElement>(null);
 
 let map: L.Map;
+
 
 onMounted(() => {
   map = L.map(targetElement.value, {
@@ -51,7 +56,14 @@ onMounted(() => {
 
   // var markers = new L.MarkerClusterGroup({maxClusterRadius: 50,spiderfyDistanceMultiplier:2.5});
   // map.addLayer(markers);
+
+  map.addLayer(layerGroupPlayerPositions);
 });
+
+
+watch(() => props.timeSelection, v => {
+  setToTime(v)
+})
 
 onUnmounted(() => map.remove());
 </script>

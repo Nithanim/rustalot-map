@@ -1,21 +1,37 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { Dayjs } from "dayjs";
 
 const props = defineProps<{
   start: Dayjs;
   end: Dayjs;
+  selected: Dayjs;
+}>();
+
+const emits = defineEmits<{
+  (name: "update:selected", value: Dayjs): void;
 }>();
 
 const sliderInput = ref(0);
 
-const diffMinutes = computed(() => props.end.diff(props.start) / 1000 / 60)
+const diffMinutes = computed(() => props.end.diff(props.start) / 1000 / 60);
 
 const interpolated = computed(() => {
-  //let interpolatedMinutes = (diffMinutes * sliderInput.value) / 100;
-  //return props.start.add(interpolatedMinutes, "minutes");
   return props.start.add(sliderInput.value, "minutes");
 });
+
+watch(
+  () => props.selected,
+  (v) => {
+    if (v.isBefore(props.start) || v.isAfter(props.end)) {
+      sliderInput.value = props.start;
+    } else {
+      sliderInput.value = v.diff(props.start) / 1000 / 60;
+    }
+  },
+);
+
+watch(interpolated, (v) => emits("update:selected", v));
 </script>
 
 <template>

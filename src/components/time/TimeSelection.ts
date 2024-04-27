@@ -1,6 +1,6 @@
 import dayjs from "dayjs"
 
-export default interface TimeSelection {
+export interface TimeSelection {
     name: string,
     start: Dayjs,
     end: Dayjs,

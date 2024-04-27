@@ -1,12 +1,27 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import TimeDaySelector from "./TimeDaySelector.vue";
 import TimeSlider from "./TimeSlider.vue";
-import {selectionItems} from "@/components/time/TimeSelection";
+import { type TimeSelection, selectionItems } from "@/components/time/TimeSelection";
+import type {Dayjs} from "dayjs";
 
 const props = defineProps<{}>();
 
-const selected = ref<SelectionItem>(selectionItems[0]);
+const selectedDay = ref<TimeSelection>(selectionItems[0]);
+const selectedTime = ref(selectedDay.value.start)
+
+const emits = defineEmits<{
+  (name: "selectedDay", value: TimeSelection): void;
+  (name: "selectedTime", value: Dayjs): void;
+}>();
+
+watch(selectedDay, (v) => emits("selectedDay", v), {
+  immediate: true,
+});
+
+watch(selectedTime, (v) => emits("selectedTime", v), {
+  immediate: true,
+});
 
 onMounted(() => {});
 </script>
@@ -15,8 +30,13 @@ onMounted(() => {});
   <div class="floating-parent">
     <div class="floating-child">
       <div class="main">
-        <TimeDaySelector v-model:selection="selected"></TimeDaySelector>
-        <TimeSlider v-if="selected" :start="selected.start" :end="selected.end"></TimeSlider>
+        <TimeDaySelector v-model:selection="selectedDay"></TimeDaySelector>
+        <TimeSlider
+          v-if="selectedDay"
+          :start="selectedDay.start"
+          :end="selectedDay.end"
+          v-model:selected="selectedTime"
+        ></TimeSlider>
       </div>
     </div>
   </div>
